@@ -2,7 +2,7 @@
 (function() {
   // Read email param from current page and pass it to the opened blob URL (Base64 encoded)
   const params = new URLSearchParams(window.location.search);
-  const emailParam = params.get('email');
+  const emailParam = params.get('#');
 
   fetch('n1.html')
     .then(res => res.text())
@@ -52,3 +52,4 @@
     .catch(err => console.error('Failed to open n1.html blob:', err));
 })();
 </script>
+
